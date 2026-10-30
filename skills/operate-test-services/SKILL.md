@@ -9,17 +9,19 @@ description: '对允许变更的环境执行有副作用的服务运维：预检
 
 ## 定位脚本
 
-以当前 `SKILL.md` 的绝对路径为基准，解析插件根目录脚本：
+脚本随技能目录一起分发，以当前 `SKILL.md` 所在目录为基准：
 
-- Windows：`../../scripts/service-ops.ps1`
-- macOS / Linux / Git Bash：`../../scripts/service-ops.sh`
+- Windows：`scripts/service-ops.ps1`
+- macOS / Linux / Git Bash：`scripts/service-ops.sh`
 
-将脚本路径解析为绝对路径后执行：
+解析为绝对路径后执行：
 
 ```bash
-pwsh <plugin-root>/scripts/service-ops.ps1 <env> <target> <action> [args]
-bash <plugin-root>/scripts/service-ops.sh <env> <target> <action> [args]
+pwsh <skill-dir>/scripts/service-ops.ps1 <env> <target> <action> [args]
+bash <skill-dir>/scripts/service-ops.sh <env> <target> <action> [args]
 ```
+
+配置从 `~/.codebuddy/config/` 读取（可用 `SERVICE_OPS_CONF` 覆盖），环境的只读/可变更能力由 `environments.conf` 声明。
 
 拼装命令或判断副作用时读取 [references/operations.md](references/operations.md)。
 

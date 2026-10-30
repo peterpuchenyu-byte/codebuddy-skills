@@ -94,11 +94,19 @@ get_config(){
   grep -vE '^\s*#|^\s*$' "$file"
 }
 
+# 配置文件存在性检查
+# 注意: get_config 通常在 $(...) 子 shell 中调用, 其内部的 die 只退出子 shell,
+# 因此主流程必须先用本函数显式检查, 否则配置缺失时会继续执行并报出误导性错误。
+require_file(){
+  [ -f "$1" ] || die "配置文件不存在: $1"
+}
+
 # ---- 加载服务器 ----
 load_server(){
   local envName="$1" key="$2"
   local envInfo; envInfo=$(get_env_files "$envName")
   local serversFile; serversFile="${envInfo%%|*}"
+  require_file "$serversFile"
   local line; line=$(get_config "$serversFile" | grep -E "^${key}\|" | head -1)
   [ -n "$line" ] || die "server '$key' 未配置 ($serversFile)"
   IFS='|' read -r SRV_NAME SRV_HOST SRV_USER SRV_KEY SRV_LAN SRV_DESC <<< "$line"
@@ -113,6 +121,7 @@ load_service(){
   local envInfo; envInfo=$(get_env_files "$envName")
   local rest="${envInfo#*|}"
   local servicesFile; servicesFile="${rest%%|*}"
+  require_file "$servicesFile"
   local line; line=$(get_config "$servicesFile" | grep -E "^${key}\|" | head -1)
   [ -n "$line" ] || die "service '$key' 未配置 ($servicesFile)"
   IFS='|' read -r SVC_NAME SVC_SERVERS SVC_LOGDIR_TPL SVC_LOGGLOB SVC_DESC SVC_REPO SVC_MODULE SVC_DIR SVC_ARTIFACT SVC_DEPLOY_MODE SVC_KIND SVC_VERIFY_URL SVC_PACKAGE_MANAGER <<< "$line"

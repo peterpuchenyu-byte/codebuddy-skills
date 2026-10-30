@@ -18,7 +18,7 @@
 |---|---|
 | 技能加载位置 | 用户级 `~/.codebuddy/skills/<name>/`；项目级 `<workspace>/.codebuddy/skills/<name>/` |
 | 技能识别条件 | 目录内存在 `SKILL.md`，且 YAML frontmatter 有 `name` 与 `description` |
-| 脚本定位方式 | `SKILL.md` 用相对自身路径的 `../../scripts/`，即仓库根下的 `scripts/`。**不要改成绝对路径** |
+| 脚本定位方式 | 每个技能目录下的 `scripts/service-ops.*`，`SKILL.md` 用相对技能目录的 `scripts/` 引用。**不要改成绝对路径，也不要把脚本挪到仓库根**——技能会被单独链接或拷贝到 `~/.codebuddy/skills/`，跨目录引用会失效 |
 | 配置目录解析顺序 | `SERVICE_OPS_CONF` → 仓库内 `config/`（须已存在 `servers-*.conf`）→ `~/.codebuddy/config` |
 | 环境权限来源 | `config/environments.conf` 每行 `名称\|只读\|允许变更\|显示名`；**不要按环境名推断能力** |
 | 无 environments.conf 时 | 回退为 `prod` 只读、`test` 可变更（兼容旧用法） |
@@ -45,7 +45,7 @@
 
 ## 修改本仓库时的规则
 
-1. **双平台同步**：改 `service-ops.ps1` 必须同步改 `service-ops.sh`，反之亦然。两者行为要一致。
+1. **三处同步**：`service-ops.ps1` 与 `service-ops.sh` 必须行为一致；且 `skills/diagnose-services/scripts/` 与 `skills/operate-test-services/scripts/` 各有一份副本，改任一处必须同步另一处（改完用 `diff` 确认两份完全相同）。
 2. **不引入绝对路径**：脚本用 `$PSCommandPath` / `BASH_SOURCE` 推导自身位置。
 3. **配置只放模板**：新增配置项时，同步更新 `config/*.example.conf` 与 `.gitignore`。
 4. **不提交真实值**：提交前检查 `git diff`，确认没有主机、账号、密钥、内网地址。

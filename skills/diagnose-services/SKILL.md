@@ -1,25 +1,27 @@
 ---
 name: diagnose-services
-description: '对 prod/test 服务和基础设施执行只读诊断：检查进程与健康状态、查询日志和时间窗口、追踪 traceId、统计 Nginx 状态码，并检查 JVM、磁盘、内存、CPU、端口和全局服务分布。用户提到服务异常、日志、ERROR/WARN、traceId、巡检、JVM、磁盘、内存、网络、Nginx、prod/test 服务器或要求定位故障时使用。生产环境始终只读。'
+description: '对只读环境中的服务和基础设施执行诊断：检查进程与健康状态、查询日志和时间窗口、追踪 traceId、统计 Nginx 状态码，并检查 JVM、磁盘、内存、CPU、端口和全局服务分布。用户提到服务异常、日志、ERROR/WARN、traceId、巡检、JVM、磁盘、内存、网络、Nginx、生产或测试服务器或要求定位故障时使用。只读环境始终只读。'
 ---
 
 # Diagnose Services
 
-使用插件脚本完成服务、调用链和主机资源的证据化诊断。只执行查询动作；将测试环境构建、上传、重启、发布或自定义命令交给 `$operate-test-services`。
+使用技能内脚本完成服务、调用链和主机资源的证据化诊断。只执行查询动作；将允许变更环境中的构建、上传、重启、发布或自定义命令交给 `$operate-test-services`。
 
 ## 定位脚本
 
-以当前 `SKILL.md` 的绝对路径为基准，解析插件根目录脚本：
+脚本随技能目录一起分发，以当前 `SKILL.md` 所在目录为基准：
 
-- Windows：`../../scripts/service-ops.ps1`
-- macOS / Linux / Git Bash：`../../scripts/service-ops.sh`
+- Windows：`scripts/service-ops.ps1`
+- macOS / Linux / Git Bash：`scripts/service-ops.sh`
 
-将脚本路径解析为绝对路径后执行，不依赖当前工作目录：
+解析为绝对路径后执行，不依赖当前工作目录：
 
 ```bash
-pwsh <plugin-root>/scripts/service-ops.ps1 <prod|test> <target> <action> [args]
-bash <plugin-root>/scripts/service-ops.sh <prod|test> <target> <action> [args]
+pwsh <skill-dir>/scripts/service-ops.ps1 <env> <target> <action> [args]
+bash <skill-dir>/scripts/service-ops.sh <env> <target> <action> [args]
 ```
+
+配置从 `~/.codebuddy/config/` 读取（可用 `SERVICE_OPS_CONF` 覆盖）。首次使用前需按仓库内 `config/*.example.conf` 准备 `environments.conf`、`servers-<env>.conf`、`services-<env>.conf`。
 
 拼装查询命令时读取 [references/commands.md](references/commands.md)。确认服务器、服务、日志目录或配置格式时读取 [references/topology.md](references/topology.md)。
 

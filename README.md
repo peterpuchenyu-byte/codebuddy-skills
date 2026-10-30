@@ -11,7 +11,7 @@
 | `diagnose-services` | 服务与主机只读诊断：进程、健康、日志、traceId、Nginx 状态码、JVM/磁盘/内存/CPU | 只读 |
 | `operate-test-services` | 受控变更：预检、构建、上传、重启、发布验证 | 需环境显式开启 |
 
-两者共用同一套脚本与配置，脚本位于 `scripts/`，技能内的 `SKILL.md` 通过 `../../scripts/` 引用。
+每个技能目录**自包含**：脚本放在各自的 `scripts/` 下，安装时只需部署技能目录本身，不依赖仓库里的其他路径。两个技能各带一份脚本副本，改动时必须同步。
 
 ## 目录结构
 
@@ -25,19 +25,20 @@
 │   ├── environments.example.conf
 │   ├── servers.example.conf
 │   └── services.example.conf
-├── scripts/
-│   ├── service-ops.ps1
-│   └── service-ops.sh
 └── skills/
     ├── diagnose-services/
     │   ├── SKILL.md
+    │   ├── scripts/{service-ops.ps1,service-ops.sh}
     │   ├── references/{commands.md,topology.md}
     │   └── agents/openai.yaml
     └── operate-test-services/
         ├── SKILL.md
+        ├── scripts/{service-ops.ps1,service-ops.sh}
         ├── references/operations.md
         └── agents/openai.yaml
 ```
+
+`config/` 只是模板目录，运行时的真实配置在 `~/.codebuddy/config/`。技能目录本身完全自包含——单独拷走一个技能目录也能用。
 
 ## 快速开始
 
@@ -92,8 +93,10 @@ cp config/services.example.conf    ~/.codebuddy/config/services-prod.conf
 ### 3. 自检
 
 ```bash
-pwsh scripts/service-ops.ps1 <env> doctor query     # Windows
-bash scripts/service-ops.sh  <env> doctor query     # Unix
+# Windows
+pwsh skills/diagnose-services/scripts/service-ops.ps1 <env> doctor query
+# macOS / Linux / Git Bash
+bash skills/diagnose-services/scripts/service-ops.sh  <env> doctor query
 ```
 
 `doctor` 会检查 SSH 可用性、配置完整性、私钥存在性与重复项。
