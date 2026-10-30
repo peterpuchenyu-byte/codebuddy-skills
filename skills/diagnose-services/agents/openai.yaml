@@ -1,0 +1,4 @@
+interface:
+  display_name: "诊断服务与主机"
+  short_description: "查询服务、日志、调用链、JVM、Nginx 与主机资源"
+  default_prompt: "Use $diagnose-services to diagnose the requested service in the configured environment and return evidence-backed conclusions."

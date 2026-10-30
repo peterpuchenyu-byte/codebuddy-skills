@@ -1,0 +1,24 @@
+# 真实环境配置永不进仓, 只提交 *.example.conf
+config/servers-*.conf
+config/services-*.conf
+config/environments.conf
+
+# 本机覆盖文件
+*.local
+*.local.*
+.env
+
+# 安装/市场元数据
+_meta.json
+
+# 系统与编辑器
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# 临时产物
+*.log
+__pycache__/
+node_modules/

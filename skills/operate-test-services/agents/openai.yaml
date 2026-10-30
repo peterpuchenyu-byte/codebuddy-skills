@@ -1,0 +1,4 @@
+interface:
+  display_name: "操作测试服务"
+  short_description: "安全完成测试服务的构建、上传、重启、验证与命令执行"
+  default_prompt: "Use $operate-test-services to plan, execute, and verify the requested operation in an environment that allows changes."

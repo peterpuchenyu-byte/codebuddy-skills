@@ -1,0 +1,12 @@
+# 换行策略：脚本的换行符决定它能否在对应平台执行，必须显式固定
+# 否则 Windows 的 core.autocrlf=true 会把 .sh 存成 CRLF，到 macOS/Linux 上直接崩
+* text=auto
+
+*.sh    text eol=lf
+*.ps1   text eol=crlf
+*.psm1  text eol=crlf
+*.md    text eol=lf
+*.conf  text eol=lf
+*.yaml  text eol=lf
+*.yml   text eol=lf
+*.json  text eol=lf
